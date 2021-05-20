@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "CWasm3",
+        "repositoryURL": "https://github.com/shareup/cwasm3.git",
+        "state": {
+          "branch": null,
+          "revision": "da60d7f032fd5be33053d51eb0d855b95ea163f1",
+          "version": "0.4.10"
+        }
+      },
+      {
+        "package": "swift-log",
+        "repositoryURL": "https://github.com/apple/swift-log.git",
+        "state": {
+          "branch": null,
+          "revision": "5d66f7ba25daf4f94100e7022febf3c75e37a6c7",
+          "version": "1.4.2"
+        }
+      },
+      {
+        "package": "Synchronized",
+        "repositoryURL": "https://github.com/shareup/synchronized.git",
+        "state": {
+          "branch": null,
+          "revision": "56f5956cbd9cf4bcd2f92153c03ae293dffb0987",
+          "version": "2.3.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

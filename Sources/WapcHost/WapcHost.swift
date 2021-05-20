@@ -1,5 +1,6 @@
 import Foundation
 import WasmInterpreter
+import Logging
 //
 //enum WapcFunctions: String {
 //    case guestResponse = "__guest_response"
@@ -16,11 +17,13 @@ public struct WapcHost {
     private let _vm: WasmInterpreter
     private var _state: ModuleState
     private let HOST_NS = "wapc"
+    private let logger = Logger(label: "WapcHost")
 
     init(module: [UInt8]) throws {
         _vm = try WasmInterpreter(stackSize: 1 * 120 * 1024, module: module)
         _state = ModuleState()
         
+        //TODO: handle not importing functions gracefully
         try _vm.addImportHandler(named: "__guest_response", namespace: HOST_NS, block: self.__guest_response)
         try _vm.addImportHandler(named: "__guest_error", namespace: HOST_NS, block: self.__guest_error)
         try _vm.addImportHandler(named: "__host_call", namespace: HOST_NS, block: self.__host_call)
@@ -30,7 +33,7 @@ public struct WapcHost {
         try _vm.addImportHandler(named: "__host_error", namespace: HOST_NS, block: self.__host_error)
         try _vm.addImportHandler(named: "__console_log", namespace: HOST_NS, block: self.__console_log)
         
-//        print("Finished init successfully")
+        logger.debug("Host initialized successfully")
     }
 
     private func __guest_request(opPtr: Int32, ptr: Int32) throws -> Void {
@@ -38,7 +41,7 @@ public struct WapcHost {
             try self._vm.writeToHeap(string: inv.op, byteOffset: Int(opPtr))
             try self._vm.writeToHeap(bytes: inv.msg, byteOffset: Int(ptr))
         } else {
-            print("No invocation registered")
+            logger.warning("No invocation registered")
         }
     }
     
@@ -47,16 +50,16 @@ public struct WapcHost {
         if let string = String(bytes: error, encoding: .utf8) {
             print("Guest error: ", string)
         } else {
-            print("Failed to deserialize guest error, not utf8 bytes")
+            logger.error("Failed to deserialize guest error, not utf8 bytes")
         }
     }
     
     private func __guest_response(ptr: Int32, len: Int32) throws -> Void {
-        print("Guest response invoked")
+        logger.info("Guest response invoked")
     }
     
     private func __host_call(bdPtr: Int32, bdLen: Int32, nsPtr: Int32, nsLen: Int32, opPtr: Int32, opLen: Int32, ptr: Int32, len: Int32) throws -> Int32 {
-        //TODO: implement this https://github.com/wapc/wapc-rust/blob/master/src/lib.rs#L247
+        //TODO: implement an actual host call https://github.com/wapc/wapc-rust/blob/master/src/lib.rs#L247
         let binding = try self._vm.bytesFromHeap(byteOffset: Int(bdPtr), length: Int(bdLen))
         let namespace = try self._vm.bytesFromHeap(byteOffset: Int(nsPtr), length: Int(nsLen))
         let operation = try self._vm.bytesFromHeap(byteOffset: Int(opPtr), length: Int(opLen))
@@ -64,7 +67,7 @@ public struct WapcHost {
         if let bd = String(bytes: binding, encoding: .utf8), let ns = String(bytes: namespace, encoding: .utf8), let op = String(bytes: operation, encoding: .utf8), let vec = String(bytes: body, encoding: .utf8) {
             print(String(format: "Guest invoked '%@->%@:%@ with a payload of %@'", bd, ns, op, vec))
         } else {
-            print("Failed to deserialize host call arguments")
+            logger.error("Failed to deserialize host call arguments")
         }
         
         return -1
@@ -84,7 +87,7 @@ public struct WapcHost {
         if let err = self._state.getHostError() {
             try self._vm.writeToHeap(string: err, byteOffset: Int(ptr))
         } else {
-            print("No host error, not writing to heap")
+            logger.error("No host error, not writing to heap")
         }
     }
     
@@ -102,7 +105,7 @@ public struct WapcHost {
         if let log = String(bytes: logBytes, encoding: .utf8) {
             print("Guest logged: ", log)
         } else {
-            print("Failed to deserialize guest error, not utf8 bytes")
+            logger.error("Failed to deserialize guest error, not utf8 bytes")
         }
     }
 
