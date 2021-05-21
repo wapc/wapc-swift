@@ -31,6 +31,6 @@ let package = Package(
         .testTarget(
             name: "WapcHostTests",
             dependencies: ["WapcHost", "WasmInterpreter", .product(name: "Logging", package: "swift-log")],
-            resources: [.process("hello.wasm"), .process("hello_as.wasm"), .process("hello_tinygo.wasm")]),
+            resources: [.process("hello.wasm"), .process("hello_as.wasm"), .process("hello_tinygo.wasm"), .process("hello_zig.wasm")]),
     ]
 )

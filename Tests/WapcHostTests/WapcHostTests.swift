@@ -14,20 +14,32 @@
             XCTAssertNotNil(host)
             var wapcHost = host!
             let op = "wapc:sample!Hello"
+            let bd: [UInt8] = Array("this is a test".utf8)
+            let callResult = try wapcHost.__guest_call(op: op, bd: bd)
+            XCTAssertEqual(callResult, 1)
+        }
+        
+        func testStressCallingRust() throws {
+            let host = createHost("hello")
+            XCTAssertNotNil(host)
+            var wapcHost = host!
+            let op = "wapc:sample!Hello"
+            let bd: [UInt8] = Array("this is a test".utf8)
+            for _ in 0...5000 {
+                let callResult = try wapcHost.__guest_call(op: op, bd: bd)
+                XCTAssertEqual(callResult, 1)
+            }
+        }
+        
+        func testGuestCallAssemblyScript() throws {
+            let host = createHost("hello_as")
+            XCTAssertNotNil(host)
+            var wapcHost = host!
+            let op = "hello"
             let bd: [UInt8] = Array("this is a test".utf8);
             let callResult = try wapcHost.__guest_call(op: op, bd: bd);
             XCTAssertEqual(callResult, 1)
         }
-        
-//        func testGuestCallAssemblyScript() throws {
-//            let host = createHost("hello_as")
-//            XCTAssertNotNil(host)
-//            var wapcHost = host!
-//            let op = "hello"
-//            let bd: [UInt8] = Array("this is a test".utf8);
-//            let callResult = try wapcHost.__guest_call(op: op, bd: bd);
-//            XCTAssertEqual(callResult, 1)
-//        }
         
         func testGuestCallTinyGo() throws {
             let host = createHost("hello_tinygo")
@@ -38,6 +50,17 @@
             let callResult = try wapcHost.__guest_call(op: op, bd: bd);
             XCTAssertEqual(callResult, 1)
         }
+        
+        func testGuestCallZig() throws {
+            let host = createHost("hello_zig")
+            XCTAssertNotNil(host)
+            var wapcHost = host!
+            let op = "hello"
+            let bd: [UInt8] = Array("this is a test".utf8);
+            let callResult = try wapcHost.__guest_call(op: op, bd: bd);
+            XCTAssertEqual(callResult, 1)
+        }
+        
         
         private func createHost(_ module: String) -> WapcHost? {
             if let host = try? WapcHost(module: loadModule(module: module)) {
@@ -57,7 +80,7 @@
                 }
                 return bytes
             } else {
-                print("couldn't do it")
+                print("Unable to load module: ", module)
             }
 
             return []
