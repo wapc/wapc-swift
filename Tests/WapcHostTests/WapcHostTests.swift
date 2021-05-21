@@ -12,7 +12,7 @@
             var wapcHost = host!
             let op = "wapc:sample!Hello"
             let bd: [UInt8] = Array("this is a test".utf8)
-            let callResult = try wapcHost.__guest_call(op: op, bd: bd)
+            let callResult = try wapcHost.guestCall(op: op, bd: bd)
             XCTAssertEqual(callResult, 1)
         }
         
@@ -23,7 +23,7 @@
             let op = "wapc:sample!Hello"
             let bd: [UInt8] = Array("this is a test".utf8)
             for _ in 0...5000 {
-                let callResult = try wapcHost.__guest_call(op: op, bd: bd)
+                let callResult = try wapcHost.guestCall(op: op, bd: bd)
                 XCTAssertEqual(callResult, 1)
             }
         }
@@ -34,7 +34,7 @@
             var wapcHost = host!
             let op = "hello"
             let bd: [UInt8] = Array("this is a test".utf8);
-            let callResult = try wapcHost.__guest_call(op: op, bd: bd);
+            let callResult = try wapcHost.guestCall(op: op, bd: bd);
             XCTAssertEqual(callResult, 1)
         }
         
@@ -44,7 +44,7 @@
             var wapcHost = host!
             let op = "hello"
             let bd: [UInt8] = Array("this is a test".utf8);
-            let callResult = try wapcHost.__guest_call(op: op, bd: bd);
+            let callResult = try wapcHost.guestCall(op: op, bd: bd);
             XCTAssertEqual(callResult, 1)
         }
         
@@ -54,7 +54,7 @@
             var wapcHost = host!
             let op = "hello"
             let bd: [UInt8] = Array("this is a test".utf8);
-            let callResult = try wapcHost.__guest_call(op: op, bd: bd);
+            let callResult = try wapcHost.guestCall(op: op, bd: bd);
             XCTAssertEqual(callResult, 1)
         }
         
