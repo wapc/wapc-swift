@@ -11,7 +11,7 @@ public struct WapcHost {
     init(module: [UInt8]) throws {
         _vm = try WasmInterpreter(stackSize: 1 * 120 * 1024, module: module)
         _state = ModuleState()
-
+        
         if (try? _vm.addImportHandler(named: "__guest_response", namespace: HOST_NS, block: self.__guest_response)) == nil {
             logger.warning("Guest did not import __guest_response")
         }
@@ -39,11 +39,22 @@ public struct WapcHost {
         if (try? _vm.addImportHandler(named: "fd_write", namespace: "wasi_unstable", block: self.fd_write)) == nil {
             // Only required for TinyGo guests, supressing warning
         }
+        try _vm.addImportHandler(named: "__guest_request", namespace: HOST_NS, block: self.__guest_request)
         
+        // Call exported module initialization functions
+        if (try? _vm.call("_start")) == nil {
+            // Only present on TinyGo guests
+            logger.debug("_start function not exported")
+        }
+        if (try? _vm.call("wapc_init")) == nil {
+            logger.warning("wapc_init function not exported")
+        }
+
         logger.debug("Host initialized successfully")
     }
     
     private func __guest_request(opPtr: Int32, ptr: Int32) throws -> Void {
+        logger.info("Guest request invoked")
         if let inv = self._state.getGuestRequest() {
             try self._vm.writeToHeap(string: inv.op, byteOffset: Int(opPtr))
             try self._vm.writeToHeap(bytes: inv.msg, byteOffset: Int(ptr))
@@ -123,6 +134,7 @@ public struct WapcHost {
         }
         
         // Return `1` for a successful call
+        logger.info("Trying to call")
         if (try? _vm.call("__guest_call", Int32(op.count), Int32(bd.count))) != nil {
             return 1
         } else {

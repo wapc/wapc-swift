@@ -5,9 +5,6 @@
         override func setUp() {
             self.continueAfterFailure = false
         }
-//        func testCanCreateHost() {
-//            XCTAssertNotNil(createHost("hello"))
-//        }
         
         func testGuestCallRust() throws {
             let host = createHost("hello")
