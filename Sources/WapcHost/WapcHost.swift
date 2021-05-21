@@ -132,13 +132,11 @@ public struct WapcHost {
     
     // Required for TinyGo guests
     private func fd_write(fileDescriptor: Int32, iovsPtr: Int32, iovsLen: Int32, writtenPtr: Int32) throws -> Int32 {
-        //logger.info("fd_write invoked")
         if fileDescriptor != 1 {
-            logger.error("Only writing to stdout with fd_write is supported")
+            logger.error("Only writing to stdout (1) with fd_write is supported")
             return 0
         }
         
-        // array with length iovsLen
         var iovsCount = iovsLen
         var iovsPointer = iovsPtr
         var bytesWritten: Int32 = 0
@@ -149,10 +147,10 @@ public struct WapcHost {
             let str = try _vm.bytesFromHeap(byteOffset: Int(base), length: Int(length))
             iovsPointer += 8
             bytesWritten += length
-            logger.info("fd_write: \(String(bytes: str, encoding: .utf8)!)")
+            print("\(String(bytes: str, encoding: .utf8)!)", terminator: "")
         }
 
-        return bytesWritten
+        return 0
     }
 
 
