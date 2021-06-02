@@ -16,10 +16,9 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        // TODO: revert to upstream WasmInterpreter once https://github.com/shareup/wasm-interpreter-apple/pull/11 is merged
 //        .package(name: "WasmInterpreter", url: "https://github.com/shareup/wasm-interpreter-apple.git", from: "0.5.0"),
-//        .package(name: "WasmInterpreter", url: "https://github.com/brooksmtownsend/wasm-interpreter-apple.git", from: "0.5.0"),
-        .package(name: "WasmInterpreter", path: "../../brooksmtownsend/wasm-interpreter-apple"),
+        .package(name: "WasmInterpreter", url: "https://github.com/brooksmtownsend/wasm-interpreter-apple.git", from: "0.5.2"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0"),
     ],
     targets: [

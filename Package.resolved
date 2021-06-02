@@ -27,6 +27,15 @@
           "revision": "56f5956cbd9cf4bcd2f92153c03ae293dffb0987",
           "version": "2.3.0"
         }
+      },
+      {
+        "package": "WasmInterpreter",
+        "repositoryURL": "https://github.com/brooksmtownsend/wasm-interpreter-apple.git",
+        "state": {
+          "branch": null,
+          "revision": "cec4a0c6f89a04dfbd07da8651abc4432287936d",
+          "version": "0.5.2"
+        }
       }
     ]
   },
