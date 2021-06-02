@@ -1,6 +1,6 @@
 # waPC Swift Host
 
-This is the Swift implementation of the **waPC** standard for WebAssembly host runtimes.
+This is the (incomplete) Swift implementation of the **waPC** standard for WebAssembly host runtimes.
 
 ## Usage
 Refer to the [Tests](./Tests/WapcHostTests/WapcHostTests.swift) for usage examples with the included "hello" sample modules.
